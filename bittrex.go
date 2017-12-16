@@ -3,8 +3,9 @@ package bittrex
 import "net/http"
 
 const (
-	baseURI    string = "https://bittrex.com/api"
-	apiVersion string = "v1.1"
+	baseURI                string = "https://bittrex.com/api"
+	apiVersion             string = "v1.1"
+	undocumentedApiVersion string = "v2.0"
 )
 
 var (

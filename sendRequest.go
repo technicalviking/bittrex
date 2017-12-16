@@ -14,7 +14,15 @@ import (
 
 func (c *Client) sendRequest(endpoint string, params map[string]string) *baseResponse {
 	nonce := time.Now().Unix()
-	endpoint = strings.Join([]string{baseURI, apiVersion, endpoint}, "/")
+
+	version := apiVersion
+
+	if params["useApi2"] != "" {
+		version = undocumentedApiVersion
+		delete(params, "useApi2")
+	}
+
+	endpoint = strings.Join([]string{baseURI, version, endpoint}, "/")
 
 	fullURI := fmt.Sprintf("%s?nonce=%d", endpoint, nonce)
 

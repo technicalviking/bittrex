@@ -235,3 +235,13 @@ type WalletAddress struct {
 	Currency string `json:"Currency"` // : "VTC"
 	Address  string `json:"Address"`  // : "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo"
 }
+
+type Candle struct {
+	TimeStamp  bittrexTimestamp `json:"T"`
+	Open       float64          `json:"O"`
+	Close      float64          `json:"C"`
+	High       float64          `json:"H"`
+	Low        float64          `json:"L"`
+	Volume     float64          `json:"V"`
+	BaseVolume float64          `json:"BV"`
+}
