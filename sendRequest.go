@@ -18,7 +18,7 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 	version := apiVersion
 
 	if params["useApi2"] != "" {
-		version = undocumentedApiVersion
+		version = undocumentedAPIVersion
 		delete(params, "useApi2")
 	}
 
@@ -50,9 +50,32 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 	var resp *http.Response
 	var respErr error
 
-	if resp, respErr = httpClient.Do(request); respErr != nil {
-		c.setError("sendRequest - do request", respErr.Error())
-		return nil
+	done := make(chan bool, 1)
+
+	clientTimer := time.NewTimer(c.timeout)
+
+	go func() {
+		if resp, respErr = httpClient.Do(request); respErr != nil {
+			c.setError("sendRequest - do request", respErr.Error())
+			done <- false
+		}
+
+		done <- true
+	}()
+
+	select {
+	case d := <-done:
+		if !d {
+			return nil
+		}
+	case <-clientTimer.C:
+		c.setError(
+			"sendRequest - do request",
+			fmt.Sprintf(
+				"BittrexAPI request timeout at %d seconds",
+				c.timeout,
+			),
+		)
 	}
 
 	defer resp.Body.Close()
