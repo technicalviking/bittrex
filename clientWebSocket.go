@@ -3,102 +3,175 @@ package bittrex
 // placeholder
 import (
 	"encoding/json"
+	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/thebotguys/signalr"
-
-	_ "github.com/thebotguys/signalr"
 )
+
+type clientMethod = func(string, string, []json.RawMessage)
+
+type bittrexSubParseError struct {
+	hub        string
+	method     string
+	message    json.RawMessage
+	rawParse   string
+	parseError error
+	//
+}
+
+func (b bittrexSubParseError) Error() string {
+	return fmt.Sprintf(
+		"Hub: %s \nMethod: %s \nMessage: %s \nRaw Parse: %v \nOriginal Error: %s",
+		b.hub,
+		b.method,
+		b.message,
+		b.rawParse,
+		b.parseError.Error(),
+	)
+}
+
+//BittrexSubscription struct representing a connection to the Bittrex websocket API.
+//sending a value to Done or closing Done
+type BittrexSubscription struct {
+	Data     chan ExchangeState
+	Error    chan error
+	Done     chan bool
+	market   string
+	wsClient *signalr.Client
+	timeout  time.Duration
+}
+
+func newSub(market string, timeout time.Duration) *BittrexSubscription {
+	return &BittrexSubscription{
+		make(chan ExchangeState),
+		make(chan error),
+		make(chan bool),
+		market,
+		signalr.NewWebsocketClient(),
+		timeout,
+	}
+}
+
+func (b *BittrexSubscription) setSubClientMethods(filter string) {
+	b.wsClient.OnClientMethod = func(hub string, method string, msgs []json.RawMessage) {
+		if hub != websocketHub || method != filter {
+			return
+		}
+		for _, msg := range msgs {
+			b.parseMessage(hub, method, msg)
+		}
+
+	}
+
+	b.wsClient.OnMessageError = func(err error) {
+		b.Error <- fmt.Errorf("Remote Error: %s", err.Error())
+	}
+}
+
+func (b *BittrexSubscription) parseMessage(hub, method string, msg json.RawMessage) {
+
+	var exchangeState ExchangeState
+
+	if parseErr := json.Unmarshal(msg, &exchangeState); parseErr != nil {
+		b.Error <- newSubError(hub, method, msg, parseErr)
+		return
+	}
+
+	if b.market == "" || exchangeState.MarketName == b.market {
+		b.Data <- exchangeState
+	}
+}
+
+func (b *BittrexSubscription) connect() {
+
+	connectDone := make(chan error)
+
+	go func() {
+		u := url.URL{Scheme: "https", Host: websocketBaseURI, Path: "/signalr/negotiate"}
+		fmt.Println(u.String())
+
+		connectDone <- b.wsClient.Connect("https", websocketBaseURI, []string{websocketHub})
+	}()
+
+	select {
+	case <-time.After(b.timeout):
+		b.Error <- fmt.Errorf("timeout error")
+	case connectErr := <-connectDone:
+		b.Error <- fmt.Errorf("connection error: %v", connectErr)
+	}
+}
+
+func (b *BittrexSubscription) subToMarket() {
+	subMethod := "SubscribeToExchangeDeltas"
+	queryMethod := "QueryExchangeState" //return
+
+	var callHubErr error
+	var param interface{}
+
+	if b.market != "" {
+		param = b.market
+	}
+
+	if _, callHubErr = b.wsClient.CallHub(websocketHub, subMethod, param); callHubErr != nil {
+		b.Error <- fmt.Errorf("SubToMarket Error: %s", callHubErr.Error())
+		//b.wsClient.Close()
+		return
+	}
+
+	var queryResponse json.RawMessage
+
+	if queryResponse, callHubErr = b.wsClient.CallHub(websocketHub, queryMethod, param); callHubErr != nil {
+		b.Error <- fmt.Errorf("QueryExchangeState Error: %s", callHubErr.Error())
+		b.wsClient.Close()
+		return
+	}
+
+	b.parseMessage(websocketHub, queryMethod, queryResponse)
+}
+
+func newSubError(hub, method string, msg json.RawMessage, parseErr error) error {
+	var rawParse string
+	//try again
+	if debugParseError := json.Unmarshal(msg, &rawParse); debugParseError != nil {
+		rawParse = fmt.Sprintf("Couldn't even parse as string: %s", debugParseError.Error())
+	}
+
+	return bittrexSubParseError{
+		hub,
+		method,
+		msg,
+		rawParse,
+		parseErr,
+	}
+}
 
 //WsSubExchangeUpdates - Undocumented websocket endpoint for bittrex
 //market is an optional parameter.  passing an empty string subscribes to changes for all markets.
 //(actually that happens anyway, the param just filters what gets sent to the returned chan)
-func (c *Client) WsSubExchangeUpdates(kill <-chan bool, market string) (chan<- ExchangeState, error) {
-	wsClient := signalr.NewWebsocketClient()
+//***DO NOT USE!  Have to figure out a way around the cloudflare DDOS protection, or wait
+//until bittrex deploys an official documented websocket API.***
+func (c *Client) WsSubExchangeUpdates(market string) *BittrexSubscription {
+	sub := newSub(market, c.timeout)
 
-	dataChan := make(chan<- ExchangeState)
+	sub.setSubClientMethods("updateExchangeState")
 
-	//what does this do?
-	wsClient.OnClientMethod = getOnClientMethod("updateExchangeState", dataChan)
+	go func() {
+		sub.connect()
+		sub.subToMarket()
 
-	return nil, nil
-}
-
-type onClientMethod = func(string, string, []json.RawMessage)
-
-func getOnClientMethod(filter string, dataChan chan<- ExchangeState, market) onClientMethod {
-	return func(hub string, method string, msgs []json.RawMessage) {
-		if hub != websocketHub || method != filter {
-			return
+		select {
+		case <-sub.Done:
+			sub.wsClient.Close()
+			close(sub.Data)
+			close(sub.Error)
+		case <-sub.wsClient.DisconnectedChannel:
+			sub.Error <- fmt.Errorf("socket closed by remote host")
+			close(sub.Data)
+			close(sub.Error)
 		}
+	}()
 
-		for _, msg := range msgs {
-			var exchangeState ExchangeState
-
-			if parseErr := json.Unmarshal(msg, &exchangeState); parseErr != nil {
-				debugOutput(hub, method, msg)
-			}
-
-			if market == "" || exchangeState.MarketName == market {
-				dataChan <- exchangeState
-			}
-
-			
-		}
-	}
-}
-
-func debugOutput(hub, method string, msg json.RawMessage) {
-	var rawParse string
-	//try again
-	if debugParseError := json.Unmarshal(msg, &rawParse); debugParseError != nil {
-		rawParse = "Couldn't even parse as string"
-	}
-	//fmt.Printf("Hub: %s \nMethod: %s \nMessage: %s \nRawMessage: %v \n", hub, method, rawParse, msg)
-}
-
-// SubscribeExchangeUpdate subscribes for updates of the market.
-// Updates will be sent to dataCh.
-// To stop subscription, send to, or close 'stop'.
-func (b *Client) SubscribeExchangeUpdate(market string, dataCh chan<- ExchangeState, stop <-chan bool) error {
-	const timeout = 5 * time.Second
-	client := signalr.NewWebsocketClient()
-	client.OnClientMethod = func(hub string, method string, messages []json.RawMessage) {
-		if hub != WS_HUB || method != "updateExchangeState" {
-			return
-		}
-		parseStates(messages, dataCh, market)
-	}
-	err := doAsyncTimeout(func() error {
-		return client.Connect("https", WS_BASE, []string{WS_HUB})
-	}, func(err error) {
-		if err == nil {
-			client.Close()
-		}
-	}, timeout)
-	if err != nil {
-		return err
-	}
-	defer client.Close()
-	var msg json.RawMessage
-	err = doAsyncTimeout(func() error {
-		var err error
-		msg, err = subForMarket(client, market)
-		return err
-	}, nil, timeout)
-	if err != nil {
-		return err
-	}
-	var st ExchangeState
-	if err = json.Unmarshal(msg, &st); err != nil {
-		return err
-	}
-	st.Initial = true
-	st.MarketName = market
-	sendStateAsync(dataCh, st)
-	select {
-	case <-stop:
-	case <-client.DisconnectedChannel:
-	}
-	return nil
+	return sub
 }
