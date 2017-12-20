@@ -236,6 +236,7 @@ type WalletAddress struct {
 	Address  string `json:"Address"`  // : "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo"
 }
 
+//Candle result element as described under v2.0/pub/market/getticks
 type Candle struct {
 	TimeStamp  bittrexTimestamp `json:"T"`
 	Open       float64          `json:"O"`
@@ -244,4 +245,27 @@ type Candle struct {
 	Low        float64          `json:"L"`
 	Volume     float64          `json:"V"`
 	BaseVolume float64          `json:"BV"`
+}
+
+//OrderUpdate Update to an order listed under buys and sells in ExchangeState
+type OrderUpdate struct {
+	OrderElement //embed
+	Type         int
+}
+
+//Fill structure found inside an ExchangeState object
+type Fill struct {
+	OrderElement //embed
+	OrderType    string
+	Timestamp    bittrexTimestamp
+}
+
+// ExchangeState contains fills and order book updates for a market.
+type ExchangeState struct {
+	MarketName string
+	Nounce     int
+	Buys       []OrderUpdate
+	Sells      []OrderUpdate
+	Fills      []Fill
+	Initial    bool
 }
