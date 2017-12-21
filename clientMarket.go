@@ -21,7 +21,7 @@ func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (
 	parsedResponse = c.sendRequest("/market/buylimit", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
@@ -55,7 +55,7 @@ func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) 
 	parsedResponse = c.sendRequest("/market/selllimit", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
