@@ -32,8 +32,6 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 		fullURI = fmt.Sprintf("%s&%s=%s", fullURI, param, value)
 	}
 
-	fmt.Println("FULL URI", fullURI)
-
 	hasher := hmac.New(sha512.New, []byte(c.apiSecret))
 	hasher.Write([]byte(fullURI))
 
