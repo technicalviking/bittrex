@@ -4,7 +4,6 @@ package bittrex
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"time"
 
 	"github.com/thebotguys/signalr"
@@ -89,9 +88,6 @@ func (b *BittrexSubscription) connect() {
 	connectDone := make(chan error)
 
 	go func() {
-		u := url.URL{Scheme: "https", Host: websocketBaseURI, Path: "/signalr/negotiate"}
-		fmt.Println(u.String())
-
 		connectDone <- b.wsClient.Connect("https", websocketBaseURI, []string{websocketHub})
 	}()
 

@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// AccountGetBalances - /market/getbalances
+// AccountGetBalances - /account/getbalances
 func (c *Client) AccountGetBalances() ([]AccountBalance, error) {
 	defer c.clearError()
 
@@ -15,14 +15,14 @@ func (c *Client) AccountGetBalances() ([]AccountBalance, error) {
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/market/getbalances", params)
+	parsedResponse = c.sendRequest("account/getbalances", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/getbalances", parsedResponse.Message)
+		c.setError("api error - account/getbalances", parsedResponse.Message)
 		return nil, c.err
 	}
 
@@ -36,7 +36,7 @@ func (c *Client) AccountGetBalances() ([]AccountBalance, error) {
 	return response, nil
 }
 
-// AccountGetBalance - /market/getbalance
+// AccountGetBalance - /account/getbalance
 func (c *Client) AccountGetBalance(currency string) (AccountBalance, error) {
 	defer c.clearError()
 
@@ -47,14 +47,14 @@ func (c *Client) AccountGetBalance(currency string) (AccountBalance, error) {
 		"currency": currency,
 	}
 
-	parsedResponse = c.sendRequest("/market/getbalance", params)
+	parsedResponse = c.sendRequest("account/getbalance", params)
 
 	if parsedResponse == nil {
 		return AccountBalance{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/getbalance", parsedResponse.Message)
+		c.setError("api error - account/getbalance", parsedResponse.Message)
 		return AccountBalance{}, c.err
 	}
 
@@ -79,14 +79,14 @@ func (c *Client) AccountGetDepositAddress(currency string) (WalletAddress, error
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/getdepositaddress", params)
+	parsedResponse = c.sendRequest("account/getdepositaddress", params)
 
 	if parsedResponse == nil {
 		return WalletAddress{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/getdepositaddress", parsedResponse.Message)
+		c.setError("api error - account/getdepositaddress", parsedResponse.Message)
 		return WalletAddress{}, c.err
 	}
 
@@ -122,14 +122,14 @@ func (c *Client) AccountWithdraw(currency string, quantity float64, address stri
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/withdraw", params)
+	parsedResponse = c.sendRequest("account/withdraw", params)
 
 	if parsedResponse == nil {
 		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/withdraw", parsedResponse.Message)
+		c.setError("api error - account/withdraw", parsedResponse.Message)
 		return TransactionID{}, c.err
 	}
 
@@ -154,14 +154,14 @@ func (c *Client) AccountGetOrder(orderID string) (AccountOrderDescription, error
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/getorder", params)
+	parsedResponse = c.sendRequest("account/getorder", params)
 
 	if parsedResponse == nil {
 		return AccountOrderDescription{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/getorder", parsedResponse.Message)
+		c.setError("api error - account/getorder", parsedResponse.Message)
 		return AccountOrderDescription{}, c.err
 	}
 
@@ -192,14 +192,14 @@ func (c *Client) AccountGetOrderHistory(market string) ([]AccountOrderHistoryDes
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/getorderhistory", params)
+	parsedResponse = c.sendRequest("account/getorderhistory", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/getorderhistory", parsedResponse.Message)
+		c.setError("api error - account/getorderhistory", parsedResponse.Message)
 		return nil, c.err
 	}
 
@@ -230,14 +230,14 @@ func (c *Client) AccountGetWithdrawalHistory(currency string) ([]TransactionHist
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/getwithdrawalhistory", params)
+	parsedResponse = c.sendRequest("account/getwithdrawalhistory", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/getwithdrawalhistory", parsedResponse.Message)
+		c.setError("api error - account/getwithdrawalhistory", parsedResponse.Message)
 		return nil, c.err
 	}
 
@@ -268,14 +268,14 @@ func (c *Client) AccountGetDepositHistory(currency string) ([]TransactionHistory
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/account/getdeposithistory", params)
+	parsedResponse = c.sendRequest("account/getdeposithistory", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /account/getdeposithistory", parsedResponse.Message)
+		c.setError("api error - account/getdeposithistory", parsedResponse.Message)
 		return nil, c.err
 	}
 

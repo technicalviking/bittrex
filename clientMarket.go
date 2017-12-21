@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// MarketBuyLimit - /market/buylimit
+// MarketBuyLimit - market/buylimit
 func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (TransactionID, error) {
 	defer c.clearError()
 
@@ -18,14 +18,14 @@ func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/market/buylimit", params)
+	parsedResponse = c.sendRequest("market/buylimit", params)
 
 	if parsedResponse == nil {
 		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/buylimit", parsedResponse.Message)
+		c.setError("api error - market/buylimit", parsedResponse.Message)
 		return TransactionID{}, c.err
 	}
 
@@ -39,7 +39,7 @@ func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (
 	return response, nil
 }
 
-// MarketSellLimit - /market/selllimit
+// MarketSellLimit - market/selllimit
 func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) (TransactionID, error) {
 	defer c.clearError()
 
@@ -52,14 +52,14 @@ func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) 
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/market/selllimit", params)
+	parsedResponse = c.sendRequest("market/selllimit", params)
 
 	if parsedResponse == nil {
 		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/selllimit", parsedResponse.Message)
+		c.setError("api error - market/selllimit", parsedResponse.Message)
 		return TransactionID{}, c.err
 	}
 
@@ -73,7 +73,7 @@ func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) 
 	return response, nil
 }
 
-// MarketCancel - /market/cancel
+// MarketCancel - market/cancel
 func (c *Client) MarketCancel(uuid string) (bool, error) {
 	defer c.clearError()
 
@@ -84,21 +84,21 @@ func (c *Client) MarketCancel(uuid string) (bool, error) {
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/market/cancel", params)
+	parsedResponse = c.sendRequest("market/cancel", params)
 
 	if parsedResponse == nil {
 		return false, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/cancel", parsedResponse.Message)
+		c.setError("api error - market/cancel", parsedResponse.Message)
 		return false, c.err
 	}
 
 	return true, nil
 }
 
-// MarketGetOpenOrders - /market/getopenorders
+// MarketGetOpenOrders - market/getopenorders
 func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) {
 	defer c.clearError()
 
@@ -109,14 +109,14 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/market/getopenorders", params)
+	parsedResponse = c.sendRequest("market/getopenorders", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /market/getopenorders", parsedResponse.Message)
+		c.setError("api error - market/getopenorders", parsedResponse.Message)
 		return nil, c.err
 	}
 

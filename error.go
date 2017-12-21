@@ -7,12 +7,13 @@ type bittrexError struct {
 	msg      string
 }
 
-func (b bittrexError) Error() string {
+func (b *bittrexError) Error() string {
+
 	return fmt.Sprintf("Error at location %s: %s", b.location, b.msg)
 }
 
 func (c *Client) setError(location string, msg string) {
-	if c.err == nil {
+	if c.err.location == "" {
 		c.err = &bittrexError{
 			location,
 			msg,

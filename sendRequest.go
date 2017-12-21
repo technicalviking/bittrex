@@ -32,6 +32,8 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 		fullURI = fmt.Sprintf("%s&%s=%s", fullURI, param, value)
 	}
 
+	fmt.Println("FULL URI", fullURI)
+
 	hasher := hmac.New(sha512.New, []byte(c.apiSecret))
 	hasher.Write([]byte(fullURI))
 
@@ -76,6 +78,7 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 				c.timeout,
 			),
 		)
+		return nil
 	}
 
 	defer resp.Body.Close()
@@ -91,6 +94,7 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 	var response baseResponse
 
 	if err := json.Unmarshal(rawBody, &response); err != nil {
+		fmt.Printf("here's the response: %v\n", string(rawBody[:len(rawBody)]))
 		c.setError("parseResponse", err.Error())
 		return nil
 	}
