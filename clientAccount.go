@@ -50,7 +50,7 @@ func (c *Client) AccountGetBalance(currency string) (AccountBalance, error) {
 	parsedResponse = c.sendRequest("/market/getbalance", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return AccountBalance{}, c.err
 	}
 
 	if parsedResponse.Success != true {
@@ -82,7 +82,7 @@ func (c *Client) AccountGetDepositAddress(currency string) (WalletAddress, error
 	parsedResponse = c.sendRequest("/account/getdepositaddress", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return WalletAddress{}, c.err
 	}
 
 	if parsedResponse.Success != true {
@@ -125,7 +125,7 @@ func (c *Client) AccountWithdraw(currency string, quantity float64, address stri
 	parsedResponse = c.sendRequest("/account/withdraw", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return TransactionID{}, c.err
 	}
 
 	if parsedResponse.Success != true {
@@ -157,7 +157,7 @@ func (c *Client) AccountGetOrder(orderID string) (AccountOrderDescription, error
 	parsedResponse = c.sendRequest("/account/getorder", params)
 
 	if parsedResponse == nil {
-		return nil, c.err
+		return AccountOrderDescription{}, c.err
 	}
 
 	if parsedResponse.Success != true {
