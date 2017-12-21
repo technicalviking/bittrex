@@ -20,6 +20,10 @@ func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (
 
 	parsedResponse = c.sendRequest("/market/buylimit", params)
 
+	if parsedResponse == nil {
+		return nil, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /market/buylimit", parsedResponse.Message)
 		return TransactionID{}, c.err
@@ -50,6 +54,10 @@ func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) 
 
 	parsedResponse = c.sendRequest("/market/selllimit", params)
 
+	if parsedResponse == nil {
+		return nil, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /market/selllimit", parsedResponse.Message)
 		return TransactionID{}, c.err
@@ -78,6 +86,10 @@ func (c *Client) MarketCancel(uuid string) (bool, error) {
 
 	parsedResponse = c.sendRequest("/market/cancel", params)
 
+	if parsedResponse == nil {
+		return false, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /market/cancel", parsedResponse.Message)
 		return false, c.err
@@ -98,6 +110,10 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 	var parsedResponse *baseResponse
 
 	parsedResponse = c.sendRequest("/market/getopenorders", params)
+
+	if parsedResponse == nil {
+		return nil, c.err
+	}
 
 	if parsedResponse.Success != true {
 		c.setError("api error - /market/getopenorders", parsedResponse.Message)

@@ -10,6 +10,10 @@ func (c *Client) PublicGetMarkets() ([]MarketDescription, error) {
 
 	parsedResponse = c.sendRequest("/public/getmarkets", nil)
 
+	if parsedResponse == nil {
+		return nil, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getmarkets", parsedResponse.Message)
 		return nil, c.err
@@ -32,6 +36,10 @@ func (c *Client) PublicGetCurrencies() ([]Currency, error) {
 	var parsedResponse *baseResponse
 
 	parsedResponse = c.sendRequest("/public/getcurrencies", nil)
+
+	if parsedResponse == nil {
+		return nil, c.err
+	}
 
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getcurrencies", parsedResponse.Message)
@@ -56,6 +64,10 @@ func (c *Client) PublicGetTicker(market string) (Ticker, error) {
 
 	parsedResponse = c.sendRequest("/public/getticker", map[string]string{"market": market})
 
+	if parsedResponse == nil {
+		return Ticker{}, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getticker", parsedResponse.Message)
 		return Ticker{}, c.err
@@ -78,6 +90,10 @@ func (c *Client) PublicGetMarketSummaries() ([]MarketSummary, error) {
 	var parsedResponse *baseResponse
 
 	parsedResponse = c.sendRequest("/public/getmarketsummaries", nil)
+
+	if parsedResponse == nil {
+		return nil, c.err
+	}
 
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getmarketsummaries", parsedResponse.Message)
@@ -102,6 +118,10 @@ func (c *Client) PublicGetMarketSummary(market string) (MarketSummary, error) {
 
 	parsedResponse = c.sendRequest("/public/getmarketsummary", map[string]string{"market": market})
 
+	if parsedResponse == nil {
+		return MarketSummary{}, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getmarketsummary", parsedResponse.Message)
 		return MarketSummary{}, c.err
@@ -125,6 +145,10 @@ func (c *Client) PublicGetOrderBook(market string, orderType string) (OrderBook,
 
 	parsedResponse = c.sendRequest("/public/getorderbook", map[string]string{"market": market, "type": orderType})
 
+	if parsedResponse == nil {
+		return OrderBook{}, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getorderbook", parsedResponse.Message)
 		return OrderBook{}, c.err
@@ -147,6 +171,10 @@ func (c *Client) PublicGetMarketHistory(market string) ([]Trade, error) {
 	var parsedResponse *baseResponse
 
 	parsedResponse = c.sendRequest("/public/getmarkethistory", map[string]string{"market": market})
+
+	if parsedResponse == nil {
+		return nil, c.err
+	}
 
 	if parsedResponse.Success != true {
 		c.setError("api error - /public/getmarkethistory", parsedResponse.Message)

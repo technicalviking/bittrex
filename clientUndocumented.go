@@ -34,6 +34,10 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 
 	parsedResponse = c.sendRequest("/pub/market/getticks", params)
 
+	if parsedResponse == nil {
+		return nil, c.err
+	}
+
 	if parsedResponse.Success != true {
 		c.setError("api error - /pub/market/getticks", parsedResponse.Message)
 		return nil, c.err
