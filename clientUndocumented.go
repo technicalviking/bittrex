@@ -25,21 +25,21 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 	defer c.clearError()
 
 	params := map[string]string{
-		"market":   market,
-		"interval": interval,
-		"useApi2":  "true",
+		"marketName":   market,
+		"tickInterval": interval,
+		"useApi2":      "true",
 	}
 
 	var parsedResponse *baseResponse
 
-	parsedResponse = c.sendRequest("/pub/market/getticks", params)
+	parsedResponse = c.sendRequest("pub/market/getticks", params)
 
 	if parsedResponse == nil {
 		return nil, c.err
 	}
 
 	if parsedResponse.Success != true {
-		c.setError("api error - /pub/market/getticks", parsedResponse.Message)
+		c.setError("api error - pub/market/getticks", parsedResponse.Message)
 		return nil, c.err
 	}
 

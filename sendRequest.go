@@ -8,29 +8,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
 
-func (c *Client) sendRequest(endpoint string, params map[string]string) *baseResponse {
-	nonce := time.Now().Unix()
+type queryParams = map[string]string
 
-	version := apiVersion
-
-	if params["useApi2"] != "" {
-		version = undocumentedAPIVersion
-		delete(params, "useApi2")
-	}
-
-	endpoint = strings.Join([]string{baseURI, version, endpoint}, "/")
-
-	fullURI := fmt.Sprintf("%s?nonce=%d", endpoint, nonce)
-
-	params["apikey"] = c.apiKey
-
-	for param, value := range params {
-		fullURI = fmt.Sprintf("%s&%s=%s", fullURI, param, value)
-	}
+func (c *Client) sendRequest(endpoint string, params queryParams) *baseResponse {
+	fullURI := c.getFullURI(endpoint, params)
 
 	hasher := hmac.New(sha512.New, []byte(c.apiSecret))
 	hasher.Write([]byte(fullURI))
@@ -98,4 +84,30 @@ func (c *Client) sendRequest(endpoint string, params map[string]string) *baseRes
 	}
 
 	return &response
+}
+
+func (c *Client) getFullURI(endpoint string, params queryParams) string {
+
+	version := apiVersion
+	if params["useApi2"] != "" {
+		version = undocumentedAPIVersion
+		delete(params, "useApi2")
+	}
+
+	u, _ := url.Parse(baseURI)
+
+	u.Path = strings.Join([]string{u.Path, version, endpoint}, "/")
+
+	query := u.Query()
+
+	query.Set("nonce", fmt.Sprintf("%d", time.Now().Unix()))
+	query.Set("apikey", c.apiKey)
+
+	for param, value := range params {
+		query.Set(param, value)
+	}
+
+	u.RawQuery = query.Encode()
+
+	return u.String()
 }
