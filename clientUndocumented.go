@@ -3,19 +3,19 @@ package bittrex
 import "encoding/json"
 
 const (
-	//TickIntervalOneMin oneMin
+	//TickIntervalOneMin oneMin = 10 days worth of candles
 	TickIntervalOneMin = "oneMin"
 
-	//TickIntervalFiveMin fiveMin
+	//TickIntervalFiveMin fiveMin = 20 days worth of candles
 	TickIntervalFiveMin = "fiveMin"
 
-	//TickIntervalThirtyMin thirtyMin
+	//TickIntervalThirtyMin thirtyMin = 40 days worth of candles
 	TickIntervalThirtyMin = "thirtyMin"
 
-	//TickIntervalHour hour
+	//TickIntervalHour hour = 60 days worth of candles
 	TickIntervalHour = "hour"
 
-	//TickIntervalDay day
+	//TickIntervalDay day = 1385 days (nearly four years)
 	TickIntervalDay = "day"
 )
 

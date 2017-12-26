@@ -238,13 +238,15 @@ type WalletAddress struct {
 
 //Candle result element as described under v2.0/pub/market/getticks
 type Candle struct {
-	TimeStamp  bittrexTimestamp `json:"T"`
-	Open       float64          `json:"O"`
-	Close      float64          `json:"C"`
-	High       float64          `json:"H"`
-	Low        float64          `json:"L"`
-	Volume     float64          `json:"V"`
-	BaseVolume float64          `json:"BV"`
+	TimeStamp bittrexTimestamp `json:"T"`
+	Open      float64          `json:"O"`
+	Close     float64          `json:"C"`
+	High      float64          `json:"H"`
+	Low       float64          `json:"L"`
+	//Volume amount traded in the altcoin (Ex: the LTC in BTC-LTC)
+	Volume float64 `json:"V"`
+	//Volume amount traded in the base coin (Ex: the BTC in BTC-LTC)
+	BaseVolume float64 `json:"BV"`
 }
 
 //OrderUpdate Update to an order listed under buys and sells in ExchangeState
