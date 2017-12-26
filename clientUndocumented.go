@@ -52,3 +52,37 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 
 	return response, nil
 }
+
+// PubMarketGetLatestTick - /pub/market/getticks
+// interval must be one of the TickInterval consts
+func (c *Client) PubMarketGetLatestTick(market string, interval string) (Candle, error) {
+	defer c.clearError()
+
+	params := map[string]string{
+		"marketName":   market,
+		"tickInterval": interval,
+		"useApi2":      "true",
+	}
+
+	var parsedResponse *baseResponse
+
+	parsedResponse = c.sendRequest("pub/market/getlatesttick", params)
+
+	if parsedResponse == nil {
+		return Candle{}, c.err
+	}
+
+	if parsedResponse.Success != true {
+		c.setError("api error - pub/market/getlatesttick", parsedResponse.Message)
+		return Candle{}, c.err
+	}
+
+	var response []Candle
+
+	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
+		c.setError("parseResponse", err.Error())
+		return Candle{}, c.err
+	}
+
+	return response[0], nil
+}
