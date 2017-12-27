@@ -2,6 +2,7 @@ package bittrex
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -60,6 +61,11 @@ func (bt *bittrexTimestamp) UnmarshalJSON(raw []byte) error {
 	*bt = bittrexTimestamp(newTime)
 
 	return nil
+}
+
+func (bt *bittrexTimestamp) String() string {
+	cast := time.Time(*bt)
+	return fmt.Sprintf("%d-%d-%d %d:%d:%d", cast.Year(), cast.Month(), cast.Day(), cast.Hour(), cast.Minute(), cast.Second())
 }
 
 //MarketDescription Result element as described under /public/getmarkets
