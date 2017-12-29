@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-type bittrexTimestamp time.Time
+type BittrexTimestamp time.Time
 
-func (bt *bittrexTimestamp) UnmarshalJSON(raw []byte) error {
+func (bt *BittrexTimestamp) UnmarshalJSON(raw []byte) error {
 	var strTimestamp string //"2014-07-09T07:19:30.15"
 
 	if err := json.Unmarshal(raw, &strTimestamp); err != nil {
@@ -58,12 +58,12 @@ func (bt *bittrexTimestamp) UnmarshalJSON(raw []byte) error {
 		time.UTC,
 	)
 
-	*bt = bittrexTimestamp(newTime)
+	*bt = BittrexTimestamp(newTime)
 
 	return nil
 }
 
-func (bt *bittrexTimestamp) String() string {
+func (bt *BittrexTimestamp) String() string {
 	cast := time.Time(*bt)
 	return fmt.Sprintf("%d-%d-%d %d:%d:%d", cast.Year(), cast.Month(), cast.Day(), cast.Hour(), cast.Minute(), cast.Second())
 }
@@ -77,7 +77,7 @@ type MarketDescription struct {
 	MinTradeSize       float64          `json:"MinTradeSize"`
 	MarketName         string           `json:"MarketName"`
 	IsActive           bool             `json:"IsActive"`
-	Created            bittrexTimestamp `json:"Created"`
+	Created            BittrexTimestamp `json:"Created"`
 }
 
 //Currency Result element as described under /public/getcurrencies
@@ -106,13 +106,13 @@ type MarketSummary struct {
 	Volume            float64          `json:"Volume"`            // : 74339.61396015,
 	Last              float64          `json:"Last"`              // : 0.00000820,
 	BaseVolume        float64          `json:"BaseVolume"`        // : 0.64966963,
-	TimeStamp         bittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T07:19:30.15",
+	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T07:19:30.15",
 	Bid               float64          `json:"Bid"`               // : 0.00000820,
 	Ask               float64          `json:"Ask"`               // : 0.00000831,
 	OpenBuyOrders     int              `json:"OpenBuyOrders"`     // : 15,
 	OpenSellOrders    int              `json:"OpenSellOrders"`    // : 15,
 	PrevDay           float64          `json:"PrevDay"`           // : 0.00000821,
-	Created           bittrexTimestamp `json:"Created"`           // : "2014-03-20T06:00:00",
+	Created           BittrexTimestamp `json:"Created"`           // : "2014-03-20T06:00:00",
 	DisplayMarketName string           `json:"DisplayMarketName"` // : null
 }
 
@@ -131,7 +131,7 @@ type OrderBook struct {
 //Trade result element as described under /public/getmarkethistory
 type Trade struct {
 	ID        uint64           `json:"Id"`        // : 319435,
-	TimeStamp bittrexTimestamp `json:"TimeStamp"` // : "2014-07-09T03:21:20.08",
+	TimeStamp BittrexTimestamp `json:"TimeStamp"` // : "2014-07-09T03:21:20.08",
 	Quantity  string           `json:"Quantity"`  // : 0.30802438,
 	Price     string           `json:"Price"`     // : 0.01263400,
 	Total     string           `json:"Total"`     // : 0.00389158,
@@ -156,8 +156,8 @@ type OrderDescription struct {
 	CommissionPaid    float64          `json:"CommissionPaid"`    // : 0.00000000,
 	Price             float64          `json:"Price"`             // : 0.00000000,
 	PricePerUnit      float64          `json:"PricePerUnit"`      // : null,
-	Opened            bittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
-	Closed            bittrexTimestamp `json:"Closed"`            // : null,
+	Opened            BittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
+	Closed            BittrexTimestamp `json:"Closed"`            // : null,
 	CancelInitiated   bool             `json:"CancelInitiated"`   // : false,
 	ImmediateOrCancel bool             `json:"ImmediateOrCancel"` // : false,
 	IsConditional     bool             `json:"IsConditional"`     // : false,
@@ -181,8 +181,8 @@ type AccountOrderDescription struct {
 	CommissionPaid             float64          `json:"CommissionPaid"`             // : 0.00000000,
 	Price                      float64          `json:"Price"`                      // : 0.00000000,
 	PricePerUnit               float64          `json:"PricePerUnit"`               // : null,
-	Opened                     bittrexTimestamp `json:"Opened"`                     // : "2014-07-13T07:45:46.27",
-	Closed                     bittrexTimestamp `json:"Closed"`                     // : null,
+	Opened                     BittrexTimestamp `json:"Opened"`                     // : "2014-07-13T07:45:46.27",
+	Closed                     BittrexTimestamp `json:"Closed"`                     // : null,
 	IsOpen                     bool             `json:"IsOpen"`                     // : true,
 	Sentinel                   string           `json:"Sentinel"`                   // : "6c454604-22e2-4fb4-892e-179eede20972",
 	CancelInitiated            bool             `json:"CancelInitiated"`            // : false,
@@ -196,7 +196,7 @@ type AccountOrderDescription struct {
 type AccountOrderHistoryDescription struct {
 	OrderUUID         string           `json:"OrderUuid"`         // : "fd97d393-e9b9-4dd1-9dbf-f288fc72a185",
 	Exchange          string           `json:"Exchange"`          // : "BTC-LTC",
-	TimeStamp         bittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T04:01:00.667",
+	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T04:01:00.667",
 	OrderType         string           `json:"OrderType"`         // : "LIMIT_BUY",
 	Limit             float64          `json:"Limit"`             // : 0.00000001,
 	Quantity          float64          `json:"Quantity"`          // : 100000.00000000,
@@ -216,7 +216,7 @@ type TransactionHistoryDescription struct {
 	Currency       string           `json:"Currency"`       // : "BTC",
 	Amount         float64          `json:"Amount"`         // : 17.00000000,
 	Address        string           `json:"Address"`        // : "1DeaaFBdbB5nrHj87x3NHS4onvw1GPNyAu",
-	Opened         bittrexTimestamp `json:"Opened"`         // : "2014-07-09T04:24:47.217",
+	Opened         BittrexTimestamp `json:"Opened"`         // : "2014-07-09T04:24:47.217",
 	Authorized     bool             `json:"Authorized"`     // : true,
 	PendingPayment bool             `json:"PendingPayment"` // : false,
 	TxCost         float64          `json:"TxCost"`         // : 0.00020000,
@@ -244,7 +244,7 @@ type WalletAddress struct {
 
 //Candle result element as described under v2.0/pub/market/getticks
 type Candle struct {
-	TimeStamp bittrexTimestamp `json:"T"`
+	TimeStamp BittrexTimestamp `json:"T"`
 	Open      float64          `json:"O"`
 	Close     float64          `json:"C"`
 	High      float64          `json:"H"`
@@ -265,7 +265,7 @@ type OrderUpdate struct {
 type Fill struct {
 	OrderElement //embed
 	OrderType    string
-	Timestamp    bittrexTimestamp
+	Timestamp    BittrexTimestamp
 }
 
 // ExchangeState contains fills and order book updates for a market.
