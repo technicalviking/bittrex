@@ -2,18 +2,19 @@ package bittrex
 
 import (
 	"encoding/json"
-	"strconv"
+
+	"github.com/shopspring/decimal"
 )
 
 // MarketBuyLimit - market/buylimit
-func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (TransactionID, error) {
+func (c *Client) MarketBuyLimit(market string, quantity decimal.Decimal, rate decimal.Decimal) (TransactionID, error) {
 	defer c.clearError()
 
 	params := map[string]string{
 		"apikey":   c.apiKey,
 		"market":   market,
-		"quantity": strconv.FormatFloat(quantity, 'f', -1, 64),
-		"rate":     strconv.FormatFloat(rate, 'f', -1, 64),
+		"quantity": quantity.String(),
+		"rate":     rate.String(),
 	}
 
 	var parsedResponse *baseResponse
@@ -40,14 +41,14 @@ func (c *Client) MarketBuyLimit(market string, quantity float64, rate float64) (
 }
 
 // MarketSellLimit - market/selllimit
-func (c *Client) MarketSellLimit(market string, quantity float64, rate float64) (TransactionID, error) {
+func (c *Client) MarketSellLimit(market string, quantity decimal.Decimal, rate decimal.Decimal) (TransactionID, error) {
 	defer c.clearError()
 
 	params := map[string]string{
 		"apikey":   c.apiKey,
 		"market":   market,
-		"quantity": strconv.FormatFloat(quantity, 'f', -1, 64),
-		"rate":     strconv.FormatFloat(rate, 'f', -1, 64),
+		"quantity": quantity.String(),
+		"rate":     rate.String(),
 	}
 
 	var parsedResponse *baseResponse

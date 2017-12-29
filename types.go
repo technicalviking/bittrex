@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 type BittrexTimestamp time.Time
@@ -74,7 +76,7 @@ type MarketDescription struct {
 	BaseCurrency       string           `json:"BaseCurrency"`
 	MarketCurrencyLong string           `json:"MarketCurrencyLong"`
 	BaseCurrencyLong   string           `json:"BaseCurrencyLong"`
-	MinTradeSize       float64          `json:"MinTradeSize"`
+	MinTradeSize       decimal.Decimal  `json:"MinTradeSize"`
 	MarketName         string           `json:"MarketName"`
 	IsActive           bool             `json:"IsActive"`
 	Created            BittrexTimestamp `json:"Created"`
@@ -82,44 +84,44 @@ type MarketDescription struct {
 
 //Currency Result element as described under /public/getcurrencies
 type Currency struct {
-	Currency        string  `json:"Currency"`
-	CurrencyLong    string  `json:"CurrencyLong"`
-	MinConfirmation int     `json:"MinConfirmation"`
-	TxFee           float64 `json:"TxFee"`
-	IsActive        bool    `json:"IsActive"`
-	CoinType        string  `json:"CoinType"`
-	BaseAddress     string  `json:"BaseAddress"`
+	Currency        string          `json:"Currency"`
+	CurrencyLong    string          `json:"CurrencyLong"`
+	MinConfirmation int             `json:"MinConfirmation"`
+	TxFee           decimal.Decimal `json:"TxFee"`
+	IsActive        bool            `json:"IsActive"`
+	CoinType        string          `json:"CoinType"`
+	BaseAddress     string          `json:"BaseAddress"`
 }
 
 //Ticker Result element as described under /public/getticker
 type Ticker struct {
-	Bid  float64 `json:"Bid"`
-	Ask  float64 `json:"Ask"`
-	Last float64 `json:"Last"`
+	Bid  decimal.Decimal `json:"Bid"`
+	Ask  decimal.Decimal `json:"Ask"`
+	Last decimal.Decimal `json:"Last"`
 }
 
 //MarketSummary result element as described under /public/getmarketsummaries
 type MarketSummary struct {
 	MarketName        string           `json:"MarketName"`        // : "BTC-888",
-	High              float64          `json:"High"`              // : 0.00000919,
-	Low               float64          `json:"Low"`               // : 0.00000820,
-	Volume            float64          `json:"Volume"`            // : 74339.61396015,
-	Last              float64          `json:"Last"`              // : 0.00000820,
-	BaseVolume        float64          `json:"BaseVolume"`        // : 0.64966963,
+	High              decimal.Decimal  `json:"High"`              // : 0.00000919,
+	Low               decimal.Decimal  `json:"Low"`               // : 0.00000820,
+	Volume            decimal.Decimal  `json:"Volume"`            // : 74339.61396015,
+	Last              decimal.Decimal  `json:"Last"`              // : 0.00000820,
+	BaseVolume        decimal.Decimal  `json:"BaseVolume"`        // : 0.64966963,
 	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T07:19:30.15",
-	Bid               float64          `json:"Bid"`               // : 0.00000820,
-	Ask               float64          `json:"Ask"`               // : 0.00000831,
+	Bid               decimal.Decimal  `json:"Bid"`               // : 0.00000820,
+	Ask               decimal.Decimal  `json:"Ask"`               // : 0.00000831,
 	OpenBuyOrders     int              `json:"OpenBuyOrders"`     // : 15,
 	OpenSellOrders    int              `json:"OpenSellOrders"`    // : 15,
-	PrevDay           float64          `json:"PrevDay"`           // : 0.00000821,
+	PrevDay           decimal.Decimal  `json:"PrevDay"`           // : 0.00000821,
 	Created           BittrexTimestamp `json:"Created"`           // : "2014-03-20T06:00:00",
 	DisplayMarketName string           `json:"DisplayMarketName"` // : null
 }
 
 //OrderElement element found under 'buy' or 'sell' in an OrderBook
 type OrderElement struct {
-	Quantity float64 `json:"Quantity"`
-	Rate     float64 `json:"Rate"`
+	Quantity decimal.Decimal `json:"Quantity"`
+	Rate     decimal.Decimal `json:"Rate"`
 }
 
 //OrderBook Result body of /public/getorderbook
@@ -150,12 +152,12 @@ type OrderDescription struct {
 	OrderUUID         string           `json:"OrderUuid"`         // : "09aa5bb6-8232-41aa-9b78-a5a1093e0211",
 	Exchange          string           `json:"Exchange"`          // : "BTC-LTC",
 	OrderType         string           `json:"OrderType"`         // : "LIMIT_SELL",
-	Quantity          float64          `json:"Quantity"`          // : 5.00000000,
-	QuantityRemaining float64          `json:"QuantityRemaining"` // : 5.00000000,
-	Limit             float64          `json:"Limit"`             // : 2.00000000,
-	CommissionPaid    float64          `json:"CommissionPaid"`    // : 0.00000000,
-	Price             float64          `json:"Price"`             // : 0.00000000,
-	PricePerUnit      float64          `json:"PricePerUnit"`      // : null,
+	Quantity          decimal.Decimal  `json:"Quantity"`          // : 5.00000000,
+	QuantityRemaining decimal.Decimal  `json:"QuantityRemaining"` // : 5.00000000,
+	Limit             decimal.Decimal  `json:"Limit"`             // : 2.00000000,
+	CommissionPaid    decimal.Decimal  `json:"CommissionPaid"`    // : 0.00000000,
+	Price             decimal.Decimal  `json:"Price"`             // : 0.00000000,
+	PricePerUnit      decimal.Decimal  `json:"PricePerUnit"`      // : null,
 	Opened            BittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
 	Closed            BittrexTimestamp `json:"Closed"`            // : null,
 	CancelInitiated   bool             `json:"CancelInitiated"`   // : false,
@@ -171,16 +173,16 @@ type AccountOrderDescription struct {
 	OrderUUID                  string           `json:"OrderUuid"`                  // : "0cb4c4e4-bdc7-4e13-8c13-430e587d2cc1",
 	Exchange                   string           `json:"Exchange"`                   // : "BTC-SHLD",
 	Type                       string           `json:"Type"`                       // : "LIMIT_BUY",
-	Quantity                   float64          `json:"Quantity"`                   // : 1000.00000000,
-	QuantityRemaining          float64          `json:"QuantityRemaining"`          // : 1000.00000000,
-	Limit                      float64          `json:"Limit"`                      // : 0.00000001,
-	Reserved                   float64          `json:"Reserved"`                   // : 0.00001000,
-	ReserveRemaining           float64          `json:"ReserveRemaining"`           // : 0.00001000,
-	CommissionReserved         float64          `json:"CommissionReserved"`         // : 0.00000002,
-	CommissionReserveRemaining float64          `json:"CommissionReserveRemaining"` // : 0.00000002,
-	CommissionPaid             float64          `json:"CommissionPaid"`             // : 0.00000000,
-	Price                      float64          `json:"Price"`                      // : 0.00000000,
-	PricePerUnit               float64          `json:"PricePerUnit"`               // : null,
+	Quantity                   decimal.Decimal  `json:"Quantity"`                   // : 1000.00000000,
+	QuantityRemaining          decimal.Decimal  `json:"QuantityRemaining"`          // : 1000.00000000,
+	Limit                      decimal.Decimal  `json:"Limit"`                      // : 0.00000001,
+	Reserved                   decimal.Decimal  `json:"Reserved"`                   // : 0.00001000,
+	ReserveRemaining           decimal.Decimal  `json:"ReserveRemaining"`           // : 0.00001000,
+	CommissionReserved         decimal.Decimal  `json:"CommissionReserved"`         // : 0.00000002,
+	CommissionReserveRemaining decimal.Decimal  `json:"CommissionReserveRemaining"` // : 0.00000002,
+	CommissionPaid             decimal.Decimal  `json:"CommissionPaid"`             // : 0.00000000,
+	Price                      decimal.Decimal  `json:"Price"`                      // : 0.00000000,
+	PricePerUnit               decimal.Decimal  `json:"PricePerUnit"`               // : null,
 	Opened                     BittrexTimestamp `json:"Opened"`                     // : "2014-07-13T07:45:46.27",
 	Closed                     BittrexTimestamp `json:"Closed"`                     // : null,
 	IsOpen                     bool             `json:"IsOpen"`                     // : true,
@@ -198,12 +200,12 @@ type AccountOrderHistoryDescription struct {
 	Exchange          string           `json:"Exchange"`          // : "BTC-LTC",
 	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T04:01:00.667",
 	OrderType         string           `json:"OrderType"`         // : "LIMIT_BUY",
-	Limit             float64          `json:"Limit"`             // : 0.00000001,
-	Quantity          float64          `json:"Quantity"`          // : 100000.00000000,
-	QuantityRemaining float64          `json:"QuantityRemaining"` // : 100000.00000000,
-	Commission        float64          `json:"Commission"`        // : 0.00000000,
-	Price             float64          `json:"Price"`             // : 0.00000000,
-	PricePerUnit      float64          `json:"PricePerUnit"`      // : null,
+	Limit             decimal.Decimal  `json:"Limit"`             // : 0.00000001,
+	Quantity          decimal.Decimal  `json:"Quantity"`          // : 100000.00000000,
+	QuantityRemaining decimal.Decimal  `json:"QuantityRemaining"` // : 100000.00000000,
+	Commission        decimal.Decimal  `json:"Commission"`        // : 0.00000000,
+	Price             decimal.Decimal  `json:"Price"`             // : 0.00000000,
+	PricePerUnit      decimal.Decimal  `json:"PricePerUnit"`      // : null,
 	IsConditional     bool             `json:"IsConditional"`     // : false,
 	Condition         string           `json:"Condition"`         // : null,
 	ConditionTarget   string           `json:"ConditionTarget"`   // : null,
@@ -214,12 +216,12 @@ type AccountOrderHistoryDescription struct {
 type TransactionHistoryDescription struct {
 	PaymentUUID    string           `json:"PaymentUuid"`    // : "b52c7a5c-90c6-4c6e-835c-e16df12708b1",
 	Currency       string           `json:"Currency"`       // : "BTC",
-	Amount         float64          `json:"Amount"`         // : 17.00000000,
+	Amount         decimal.Decimal  `json:"Amount"`         // : 17.00000000,
 	Address        string           `json:"Address"`        // : "1DeaaFBdbB5nrHj87x3NHS4onvw1GPNyAu",
 	Opened         BittrexTimestamp `json:"Opened"`         // : "2014-07-09T04:24:47.217",
 	Authorized     bool             `json:"Authorized"`     // : true,
 	PendingPayment bool             `json:"PendingPayment"` // : false,
-	TxCost         float64          `json:"TxCost"`         // : 0.00020000,
+	TxCost         decimal.Decimal  `json:"TxCost"`         // : 0.00020000,
 	TxID           string           `json:"TxId"`           // : null,
 	Canceled       bool             `json:"Canceled"`       // : true,
 	InvalidAddress bool             `json:"InvalidAddress"` // : false
@@ -227,13 +229,13 @@ type TransactionHistoryDescription struct {
 
 //AccountBalance result element as described under /account/getbalances. also the result body of /account/getbalance
 type AccountBalance struct {
-	Currency      string  `json:"Currency"`      // : "DOGE",
-	Balance       float64 `json:"Balance"`       // : 0.00000000,
-	Available     float64 `json:"Available"`     // : 0.00000000,
-	Pending       float64 `json:"Pending"`       // : 0.00000000,
-	CryptoAddress string  `json:"CryptoAddress"` // : "DLxcEt3AatMyr2NTatzjsfHNoB9NT62HiF",
-	Requested     bool    `json:"Requested"`     // : false,
-	UUID          string  `json:"Uuid"`          // : null
+	Currency      string          `json:"Currency"`      // : "DOGE",
+	Balance       decimal.Decimal `json:"Balance"`       // : 0.00000000,
+	Available     decimal.Decimal `json:"Available"`     // : 0.00000000,
+	Pending       decimal.Decimal `json:"Pending"`       // : 0.00000000,
+	CryptoAddress string          `json:"CryptoAddress"` // : "DLxcEt3AatMyr2NTatzjsfHNoB9NT62HiF",
+	Requested     bool            `json:"Requested"`     // : false,
+	UUID          string          `json:"Uuid"`          // : null
 }
 
 //WalletAddress result body of /account/getdepositaddress
@@ -245,14 +247,14 @@ type WalletAddress struct {
 //Candle result element as described under v2.0/pub/market/getticks
 type Candle struct {
 	TimeStamp BittrexTimestamp `json:"T"`
-	Open      float64          `json:"O"`
-	Close     float64          `json:"C"`
-	High      float64          `json:"H"`
-	Low       float64          `json:"L"`
+	Open      decimal.Decimal  `json:"O"`
+	Close     decimal.Decimal  `json:"C"`
+	High      decimal.Decimal  `json:"H"`
+	Low       decimal.Decimal  `json:"L"`
 	//Volume amount traded in the altcoin (Ex: the LTC in BTC-LTC)
-	Volume float64 `json:"V"`
+	Volume decimal.Decimal `json:"V"`
 	//Volume amount traded in the base coin (Ex: the BTC in BTC-LTC)
-	BaseVolume float64 `json:"BV"`
+	BaseVolume decimal.Decimal `json:"BV"`
 }
 
 //OrderUpdate Update to an order listed under buys and sells in ExchangeState
