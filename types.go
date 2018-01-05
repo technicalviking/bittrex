@@ -132,13 +132,13 @@ type OrderBook struct {
 
 //Trade result element as described under /public/getmarkethistory
 type Trade struct {
-	ID        uint64           `json:"Id"`        // : 319435,
+	ID        string           `json:"Id"`        // : 319435,
 	TimeStamp BittrexTimestamp `json:"TimeStamp"` // : "2014-07-09T03:21:20.08",
-	Quantity  string           `json:"Quantity"`  // : 0.30802438,
-	Price     string           `json:"Price"`     // : 0.01263400,
-	Total     string           `json:"Total"`     // : 0.00389158,
+	Quantity  decimal.Decimal  `json:"Quantity"`  // : 0.30802438,
+	Price     decimal.Decimal  `json:"Price"`     // : 0.01263400,
+	Total     decimal.Decimal  `json:"Total"`     // : 0.00389158,
 	FillType  string           `json:"FillType"`  // : "FILL",
-	OrderType string           `json:"OrderType"` // : "BUY"
+	OrderType string           `json:"OrderType"` // : "BUY" or "SELL"
 }
 
 //TransactionID Result body of /market/buylimit and /market/sellimit
