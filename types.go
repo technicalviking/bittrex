@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"math/big"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/shopspring/decimal"
 )
 
 type BittrexTimestamp time.Time
@@ -76,7 +75,7 @@ type MarketDescription struct {
 	BaseCurrency       string           `json:"BaseCurrency"`
 	MarketCurrencyLong string           `json:"MarketCurrencyLong"`
 	BaseCurrencyLong   string           `json:"BaseCurrencyLong"`
-	MinTradeSize       decimal.Decimal  `json:"MinTradeSize"`
+	MinTradeSize       *big.Float       `json:"MinTradeSize"`
 	MarketName         string           `json:"MarketName"`
 	IsActive           bool             `json:"IsActive"`
 	Created            BittrexTimestamp `json:"Created"`
@@ -84,44 +83,44 @@ type MarketDescription struct {
 
 //Currency Result element as described under /public/getcurrencies
 type Currency struct {
-	Currency        string          `json:"Currency"`
-	CurrencyLong    string          `json:"CurrencyLong"`
-	MinConfirmation int             `json:"MinConfirmation"`
-	TxFee           decimal.Decimal `json:"TxFee"`
-	IsActive        bool            `json:"IsActive"`
-	CoinType        string          `json:"CoinType"`
-	BaseAddress     string          `json:"BaseAddress"`
+	Currency        string     `json:"Currency"`
+	CurrencyLong    string     `json:"CurrencyLong"`
+	MinConfirmation int        `json:"MinConfirmation"`
+	TxFee           *big.Float `json:"TxFee"`
+	IsActive        bool       `json:"IsActive"`
+	CoinType        string     `json:"CoinType"`
+	BaseAddress     string     `json:"BaseAddress"`
 }
 
 //Ticker Result element as described under /public/getticker
 type Ticker struct {
-	Bid  decimal.Decimal `json:"Bid"`
-	Ask  decimal.Decimal `json:"Ask"`
-	Last decimal.Decimal `json:"Last"`
+	Bid  *big.Float `json:"Bid"`
+	Ask  *big.Float `json:"Ask"`
+	Last *big.Float `json:"Last"`
 }
 
 //MarketSummary result element as described under /public/getmarketsummaries
 type MarketSummary struct {
 	MarketName        string           `json:"MarketName"`        // : "BTC-888",
-	High              decimal.Decimal  `json:"High"`              // : 0.00000919,
-	Low               decimal.Decimal  `json:"Low"`               // : 0.00000820,
-	Volume            decimal.Decimal  `json:"Volume"`            // : 74339.61396015,
-	Last              decimal.Decimal  `json:"Last"`              // : 0.00000820,
-	BaseVolume        decimal.Decimal  `json:"BaseVolume"`        // : 0.64966963,
+	High              *big.Float       `json:"High"`              // : 0.00000919,
+	Low               *big.Float       `json:"Low"`               // : 0.00000820,
+	Volume            *big.Float       `json:"Volume"`            // : 74339.61396015,
+	Last              *big.Float       `json:"Last"`              // : 0.00000820,
+	BaseVolume        *big.Float       `json:"BaseVolume"`        // : 0.64966963,
 	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T07:19:30.15",
-	Bid               decimal.Decimal  `json:"Bid"`               // : 0.00000820,
-	Ask               decimal.Decimal  `json:"Ask"`               // : 0.00000831,
+	Bid               *big.Float       `json:"Bid"`               // : 0.00000820,
+	Ask               *big.Float       `json:"Ask"`               // : 0.00000831,
 	OpenBuyOrders     int              `json:"OpenBuyOrders"`     // : 15,
 	OpenSellOrders    int              `json:"OpenSellOrders"`    // : 15,
-	PrevDay           decimal.Decimal  `json:"PrevDay"`           // : 0.00000821,
+	PrevDay           *big.Float       `json:"PrevDay"`           // : 0.00000821,
 	Created           BittrexTimestamp `json:"Created"`           // : "2014-03-20T06:00:00",
 	DisplayMarketName string           `json:"DisplayMarketName"` // : null
 }
 
 //OrderElement element found under 'buy' or 'sell' in an OrderBook
 type OrderElement struct {
-	Quantity decimal.Decimal `json:"Quantity"`
-	Rate     decimal.Decimal `json:"Rate"`
+	Quantity *big.Float `json:"Quantity"`
+	Rate     *big.Float `json:"Rate"`
 }
 
 //OrderBook Result body of /public/getorderbook
@@ -134,9 +133,9 @@ type OrderBook struct {
 type Trade struct {
 	ID        string           `json:"Id"`        // : 319435,
 	TimeStamp BittrexTimestamp `json:"TimeStamp"` // : "2014-07-09T03:21:20.08",
-	Quantity  decimal.Decimal  `json:"Quantity"`  // : 0.30802438,
-	Price     decimal.Decimal  `json:"Price"`     // : 0.01263400,
-	Total     decimal.Decimal  `json:"Total"`     // : 0.00389158,
+	Quantity  *big.Float       `json:"Quantity"`  // : 0.30802438,
+	Price     *big.Float       `json:"Price"`     // : 0.01263400,
+	Total     *big.Float       `json:"Total"`     // : 0.00389158,
 	FillType  string           `json:"FillType"`  // : "FILL",
 	OrderType string           `json:"OrderType"` // : "BUY" or "SELL"
 }
@@ -152,12 +151,12 @@ type OrderDescription struct {
 	OrderUUID         string           `json:"OrderUuid"`         // : "09aa5bb6-8232-41aa-9b78-a5a1093e0211",
 	Exchange          string           `json:"Exchange"`          // : "BTC-LTC",
 	OrderType         string           `json:"OrderType"`         // : "LIMIT_SELL",
-	Quantity          decimal.Decimal  `json:"Quantity"`          // : 5.00000000,
-	QuantityRemaining decimal.Decimal  `json:"QuantityRemaining"` // : 5.00000000,
-	Limit             decimal.Decimal  `json:"Limit"`             // : 2.00000000,
-	CommissionPaid    decimal.Decimal  `json:"CommissionPaid"`    // : 0.00000000,
-	Price             decimal.Decimal  `json:"Price"`             // : 0.00000000,
-	PricePerUnit      decimal.Decimal  `json:"PricePerUnit"`      // : null,
+	Quantity          *big.Float       `json:"Quantity"`          // : 5.00000000,
+	QuantityRemaining *big.Float       `json:"QuantityRemaining"` // : 5.00000000,
+	Limit             *big.Float       `json:"Limit"`             // : 2.00000000,
+	CommissionPaid    *big.Float       `json:"CommissionPaid"`    // : 0.00000000,
+	Price             *big.Float       `json:"Price"`             // : 0.00000000,
+	PricePerUnit      *big.Float       `json:"PricePerUnit"`      // : null,
 	Opened            BittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
 	Closed            BittrexTimestamp `json:"Closed"`            // : null,
 	CancelInitiated   bool             `json:"CancelInitiated"`   // : false,
@@ -173,16 +172,16 @@ type AccountOrderDescription struct {
 	OrderUUID                  string           `json:"OrderUuid"`                  // : "0cb4c4e4-bdc7-4e13-8c13-430e587d2cc1",
 	Exchange                   string           `json:"Exchange"`                   // : "BTC-SHLD",
 	Type                       string           `json:"Type"`                       // : "LIMIT_BUY",
-	Quantity                   decimal.Decimal  `json:"Quantity"`                   // : 1000.00000000,
-	QuantityRemaining          decimal.Decimal  `json:"QuantityRemaining"`          // : 1000.00000000,
-	Limit                      decimal.Decimal  `json:"Limit"`                      // : 0.00000001,
-	Reserved                   decimal.Decimal  `json:"Reserved"`                   // : 0.00001000,
-	ReserveRemaining           decimal.Decimal  `json:"ReserveRemaining"`           // : 0.00001000,
-	CommissionReserved         decimal.Decimal  `json:"CommissionReserved"`         // : 0.00000002,
-	CommissionReserveRemaining decimal.Decimal  `json:"CommissionReserveRemaining"` // : 0.00000002,
-	CommissionPaid             decimal.Decimal  `json:"CommissionPaid"`             // : 0.00000000,
-	Price                      decimal.Decimal  `json:"Price"`                      // : 0.00000000,
-	PricePerUnit               decimal.Decimal  `json:"PricePerUnit"`               // : null,
+	Quantity                   *big.Float       `json:"Quantity"`                   // : 1000.00000000,
+	QuantityRemaining          *big.Float       `json:"QuantityRemaining"`          // : 1000.00000000,
+	Limit                      *big.Float       `json:"Limit"`                      // : 0.00000001,
+	Reserved                   *big.Float       `json:"Reserved"`                   // : 0.00001000,
+	ReserveRemaining           *big.Float       `json:"ReserveRemaining"`           // : 0.00001000,
+	CommissionReserved         *big.Float       `json:"CommissionReserved"`         // : 0.00000002,
+	CommissionReserveRemaining *big.Float       `json:"CommissionReserveRemaining"` // : 0.00000002,
+	CommissionPaid             *big.Float       `json:"CommissionPaid"`             // : 0.00000000,
+	Price                      *big.Float       `json:"Price"`                      // : 0.00000000,
+	PricePerUnit               *big.Float       `json:"PricePerUnit"`               // : null,
 	Opened                     BittrexTimestamp `json:"Opened"`                     // : "2014-07-13T07:45:46.27",
 	Closed                     BittrexTimestamp `json:"Closed"`                     // : null,
 	IsOpen                     bool             `json:"IsOpen"`                     // : true,
@@ -200,12 +199,12 @@ type AccountOrderHistoryDescription struct {
 	Exchange          string           `json:"Exchange"`          // : "BTC-LTC",
 	TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T04:01:00.667",
 	OrderType         string           `json:"OrderType"`         // : "LIMIT_BUY",
-	Limit             decimal.Decimal  `json:"Limit"`             // : 0.00000001,
-	Quantity          decimal.Decimal  `json:"Quantity"`          // : 100000.00000000,
-	QuantityRemaining decimal.Decimal  `json:"QuantityRemaining"` // : 100000.00000000,
-	Commission        decimal.Decimal  `json:"Commission"`        // : 0.00000000,
-	Price             decimal.Decimal  `json:"Price"`             // : 0.00000000,
-	PricePerUnit      decimal.Decimal  `json:"PricePerUnit"`      // : null,
+	Limit             *big.Float       `json:"Limit"`             // : 0.00000001,
+	Quantity          *big.Float       `json:"Quantity"`          // : 100000.00000000,
+	QuantityRemaining *big.Float       `json:"QuantityRemaining"` // : 100000.00000000,
+	Commission        *big.Float       `json:"Commission"`        // : 0.00000000,
+	Price             *big.Float       `json:"Price"`             // : 0.00000000,
+	PricePerUnit      *big.Float       `json:"PricePerUnit"`      // : null,
 	IsConditional     bool             `json:"IsConditional"`     // : false,
 	Condition         string           `json:"Condition"`         // : null,
 	ConditionTarget   string           `json:"ConditionTarget"`   // : null,
@@ -216,12 +215,12 @@ type AccountOrderHistoryDescription struct {
 type TransactionHistoryDescription struct {
 	PaymentUUID    string           `json:"PaymentUuid"`    // : "b52c7a5c-90c6-4c6e-835c-e16df12708b1",
 	Currency       string           `json:"Currency"`       // : "BTC",
-	Amount         decimal.Decimal  `json:"Amount"`         // : 17.00000000,
+	Amount         *big.Float       `json:"Amount"`         // : 17.00000000,
 	Address        string           `json:"Address"`        // : "1DeaaFBdbB5nrHj87x3NHS4onvw1GPNyAu",
 	Opened         BittrexTimestamp `json:"Opened"`         // : "2014-07-09T04:24:47.217",
 	Authorized     bool             `json:"Authorized"`     // : true,
 	PendingPayment bool             `json:"PendingPayment"` // : false,
-	TxCost         decimal.Decimal  `json:"TxCost"`         // : 0.00020000,
+	TxCost         *big.Float       `json:"TxCost"`         // : 0.00020000,
 	TxID           string           `json:"TxId"`           // : null,
 	Canceled       bool             `json:"Canceled"`       // : true,
 	InvalidAddress bool             `json:"InvalidAddress"` // : false
@@ -229,13 +228,13 @@ type TransactionHistoryDescription struct {
 
 //AccountBalance result element as described under /account/getbalances. also the result body of /account/getbalance
 type AccountBalance struct {
-	Currency      string          `json:"Currency"`      // : "DOGE",
-	Balance       decimal.Decimal `json:"Balance"`       // : 0.00000000,
-	Available     decimal.Decimal `json:"Available"`     // : 0.00000000,
-	Pending       decimal.Decimal `json:"Pending"`       // : 0.00000000,
-	CryptoAddress string          `json:"CryptoAddress"` // : "DLxcEt3AatMyr2NTatzjsfHNoB9NT62HiF",
-	Requested     bool            `json:"Requested"`     // : false,
-	UUID          string          `json:"Uuid"`          // : null
+	Currency      string     `json:"Currency"`      // : "DOGE",
+	Balance       *big.Float `json:"Balance"`       // : 0.00000000,
+	Available     *big.Float `json:"Available"`     // : 0.00000000,
+	Pending       *big.Float `json:"Pending"`       // : 0.00000000,
+	CryptoAddress string     `json:"CryptoAddress"` // : "DLxcEt3AatMyr2NTatzjsfHNoB9NT62HiF",
+	Requested     bool       `json:"Requested"`     // : false,
+	UUID          string     `json:"Uuid"`          // : null
 }
 
 //WalletAddress result body of /account/getdepositaddress
@@ -247,14 +246,14 @@ type WalletAddress struct {
 //Candle result element as described under v2.0/pub/market/getticks
 type Candle struct {
 	TimeStamp BittrexTimestamp `json:"T"`
-	Open      decimal.Decimal  `json:"O"`
-	Close     decimal.Decimal  `json:"C"`
-	High      decimal.Decimal  `json:"H"`
-	Low       decimal.Decimal  `json:"L"`
+	Open      *big.Float       `json:"O"`
+	Close     *big.Float       `json:"C"`
+	High      *big.Float       `json:"H"`
+	Low       *big.Float       `json:"L"`
 	//Volume amount traded in the altcoin (Ex: the LTC in BTC-LTC)
-	Volume decimal.Decimal `json:"V"`
+	Volume *big.Float `json:"V"`
 	//Volume amount traded in the base coin (Ex: the BTC in BTC-LTC)
-	BaseVolume decimal.Decimal `json:"BV"`
+	BaseVolume *big.Float `json:"BV"`
 }
 
 //OrderUpdate Update to an order listed under buys and sells in ExchangeState

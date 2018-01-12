@@ -2,12 +2,11 @@ package bittrex
 
 import (
 	"encoding/json"
-
-	"github.com/shopspring/decimal"
+	"math/big"
 )
 
 // MarketBuyLimit - market/buylimit
-func (c *Client) MarketBuyLimit(market string, quantity decimal.Decimal, rate decimal.Decimal) (TransactionID, error) {
+func (c *Client) MarketBuyLimit(market string, quantity *big.Float, rate *big.Float) (TransactionID, error) {
 	defer c.clearError()
 
 	params := map[string]string{
@@ -41,7 +40,7 @@ func (c *Client) MarketBuyLimit(market string, quantity decimal.Decimal, rate de
 }
 
 // MarketSellLimit - market/selllimit
-func (c *Client) MarketSellLimit(market string, quantity decimal.Decimal, rate decimal.Decimal) (TransactionID, error) {
+func (c *Client) MarketSellLimit(market string, quantity *big.Float, rate *big.Float) (TransactionID, error) {
 	defer c.clearError()
 
 	params := map[string]string{

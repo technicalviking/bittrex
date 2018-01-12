@@ -2,8 +2,7 @@ package bittrex
 
 import (
 	"encoding/json"
-
-	"github.com/shopspring/decimal"
+	"math/big"
 )
 
 // AccountGetBalances - /account/getbalances
@@ -107,7 +106,7 @@ paymentId field is optional for the api (used as a memo field for other services
 such as CryptoNotes, BitShareX, Nxt).  Set it to empty string to exclude it from
 api call
 */
-func (c *Client) AccountWithdraw(currency string, quantity decimal.Decimal, address string, paymentID string) (TransactionID, error) {
+func (c *Client) AccountWithdraw(currency string, quantity *big.Float, address string, paymentID string) (TransactionID, error) {
 	defer c.clearError()
 
 	params := map[string]string{
