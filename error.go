@@ -13,7 +13,7 @@ func (b *bittrexError) Error() string {
 }
 
 func (c *Client) setError(location string, msg string) {
-	if c.err.location == "" {
+	if c.err == nil || c.err.location == "" {
 		c.err = &bittrexError{
 			location,
 			msg,
