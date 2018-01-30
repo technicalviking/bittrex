@@ -73,6 +73,74 @@ func (c *Client) MarketSellLimit(market string, quantity *big.Float, rate *big.F
 	return response, nil
 }
 
+// MarketBuyMarket - market/buymarket - EXPERIMENTAL
+func (c *Client) MarketBuyMarket(market string, quantity *big.Float, rate *big.Float) (TransactionID, error) {
+	defer c.clearError()
+
+	params := map[string]string{
+		"apikey":   c.apiKey,
+		"market":   market,
+		"quantity": quantity.String(),
+		"rate":     rate.String(),
+	}
+
+	var parsedResponse *baseResponse
+
+	parsedResponse = c.sendRequest("market/buymarket", params)
+
+	if parsedResponse == nil {
+		return TransactionID{}, c.err
+	}
+
+	if parsedResponse.Success != true {
+		c.setError("api error - market/buymarket", parsedResponse.Message)
+		return TransactionID{}, c.err
+	}
+
+	var response TransactionID
+
+	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
+		c.setError("parseResponse", err.Error())
+		return TransactionID{}, c.err
+	}
+
+	return response, nil
+}
+
+// MarketSellMarket - market/sellmarket - EXPERIMENTAL
+func (c *Client) MarketSellMarket(market string, quantity *big.Float, rate *big.Float) (TransactionID, error) {
+	defer c.clearError()
+
+	params := map[string]string{
+		"apikey":   c.apiKey,
+		"market":   market,
+		"quantity": quantity.String(),
+		"rate":     rate.String(),
+	}
+
+	var parsedResponse *baseResponse
+
+	parsedResponse = c.sendRequest("market/sellmarket", params)
+
+	if parsedResponse == nil {
+		return TransactionID{}, c.err
+	}
+
+	if parsedResponse.Success != true {
+		c.setError("api error - market/sellmarket", parsedResponse.Message)
+		return TransactionID{}, c.err
+	}
+
+	var response TransactionID
+
+	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
+		c.setError("parseResponse", err.Error())
+		return TransactionID{}, c.err
+	}
+
+	return response, nil
+}
+
 // MarketCancel - market/cancel
 func (c *Client) MarketCancel(uuid string) (bool, error) {
 	defer c.clearError()
