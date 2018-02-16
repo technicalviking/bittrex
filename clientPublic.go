@@ -127,14 +127,14 @@ func (c *Client) PublicGetMarketSummary(market string) (MarketSummary, error) {
 		return MarketSummary{}, c.err
 	}
 
-	var response MarketSummary
+	var response []MarketSummary
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("parseResponse", err.Error())
 		return MarketSummary{}, c.err
 	}
 
-	return response, nil
+	return response[0], nil
 }
 
 // PublicGetOrderBook - public/getorderbook
