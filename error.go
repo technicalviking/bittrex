@@ -8,8 +8,7 @@ type bittrexError struct {
 }
 
 func (b *bittrexError) Error() string {
-
-	return fmt.Sprintf("Error at location %s: %s", b.location, b.msg)
+	return fmt.Sprintf("Bittrex API Error at location %s: %s", b.location, b.msg)
 }
 
 func (c *Client) setError(location string, msg string) {

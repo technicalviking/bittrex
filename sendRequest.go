@@ -77,7 +77,13 @@ func (c *Client) sendRequest(endpoint string, params queryParams) *baseResponse 
 
 	var response baseResponse
 
-	if err := json.Unmarshal(rawBody, &response); err != nil {
+	if rawBody == nil || len(rawBody) == 0 {
+		response = baseResponse{
+			Success: false,
+			Message: fmt.Sprintf("Response from API endpoint %s was nil or empty", endpoint),
+			Result:  rawBody,
+		}
+	} else if err := json.Unmarshal(rawBody, &response); err != nil {
 		fmt.Printf("here's the response: %v\n", string(rawBody[:len(rawBody)]))
 		c.setError("parseResponse", err.Error())
 		return nil
