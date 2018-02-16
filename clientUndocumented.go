@@ -34,7 +34,7 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 
 	parsedResponse = c.sendRequest("pub/market/getticks", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -46,7 +46,7 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 	var response []Candle
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - pub/market/getticks", err.Error())
 		return nil, c.err
 	}
 
@@ -68,7 +68,7 @@ func (c *Client) PubMarketGetLatestTick(market string, interval string) (Candle,
 
 	parsedResponse = c.sendRequest("pub/market/getlatesttick", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return Candle{}, c.err
 	}
 
@@ -80,7 +80,7 @@ func (c *Client) PubMarketGetLatestTick(market string, interval string) (Candle,
 	var response []Candle
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - pub/market/getlatesttick", err.Error())
 		return Candle{}, c.err
 	}
 

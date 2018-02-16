@@ -10,7 +10,7 @@ func (c *Client) PublicGetMarkets() ([]MarketDescription, error) {
 
 	parsedResponse = c.sendRequest("public/getmarkets", nil)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -22,7 +22,7 @@ func (c *Client) PublicGetMarkets() ([]MarketDescription, error) {
 	var response []MarketDescription
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getmarkets", err.Error())
 		return nil, c.err
 	}
 
@@ -37,7 +37,7 @@ func (c *Client) PublicGetCurrencies() ([]Currency, error) {
 
 	parsedResponse = c.sendRequest("public/getcurrencies", nil)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -49,7 +49,7 @@ func (c *Client) PublicGetCurrencies() ([]Currency, error) {
 	var response []Currency
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getcurrencies", err.Error())
 		return nil, c.err
 	}
 
@@ -64,7 +64,7 @@ func (c *Client) PublicGetTicker(market string) (Ticker, error) {
 
 	parsedResponse = c.sendRequest("public/getticker", map[string]string{"market": market})
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return Ticker{}, c.err
 	}
 
@@ -76,7 +76,7 @@ func (c *Client) PublicGetTicker(market string) (Ticker, error) {
 	var response Ticker
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getticker", err.Error())
 		return Ticker{}, c.err
 	}
 
@@ -91,7 +91,7 @@ func (c *Client) PublicGetMarketSummaries() ([]MarketSummary, error) {
 
 	parsedResponse = c.sendRequest("public/getmarketsummaries", nil)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -103,7 +103,7 @@ func (c *Client) PublicGetMarketSummaries() ([]MarketSummary, error) {
 	var response []MarketSummary
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getmarketsummaries", err.Error())
 		return nil, c.err
 	}
 
@@ -118,7 +118,7 @@ func (c *Client) PublicGetMarketSummary(market string) (MarketSummary, error) {
 
 	parsedResponse = c.sendRequest("public/getmarketsummary", map[string]string{"market": market})
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return MarketSummary{}, c.err
 	}
 
@@ -130,7 +130,7 @@ func (c *Client) PublicGetMarketSummary(market string) (MarketSummary, error) {
 	var response []MarketSummary
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getmarketsummary", err.Error())
 		return MarketSummary{}, c.err
 	}
 
@@ -145,7 +145,7 @@ func (c *Client) PublicGetOrderBook(market string, orderType string) (OrderBook,
 
 	parsedResponse = c.sendRequest("public/getorderbook", map[string]string{"market": market, "type": orderType})
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return OrderBook{}, c.err
 	}
 
@@ -157,7 +157,7 @@ func (c *Client) PublicGetOrderBook(market string, orderType string) (OrderBook,
 	var response OrderBook
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getorderbook", err.Error())
 		return OrderBook{}, c.err
 	}
 
@@ -172,7 +172,7 @@ func (c *Client) PublicGetMarketHistory(market string) ([]Trade, error) {
 
 	parsedResponse = c.sendRequest("public/getmarkethistory", map[string]string{"market": market})
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -184,7 +184,7 @@ func (c *Client) PublicGetMarketHistory(market string) ([]Trade, error) {
 	var response []Trade
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - public/getmarkethistory", err.Error())
 		return nil, c.err
 	}
 

@@ -20,7 +20,7 @@ func (c *Client) MarketBuyLimit(market string, quantity *big.Float, rate *big.Fl
 
 	parsedResponse = c.sendRequest("market/buylimit", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return TransactionID{}, c.err
 	}
 
@@ -32,7 +32,7 @@ func (c *Client) MarketBuyLimit(market string, quantity *big.Float, rate *big.Fl
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - market/buylimit", err.Error())
 		return TransactionID{}, c.err
 	}
 
@@ -54,7 +54,7 @@ func (c *Client) MarketSellLimit(market string, quantity *big.Float, rate *big.F
 
 	parsedResponse = c.sendRequest("market/selllimit", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return TransactionID{}, c.err
 	}
 
@@ -66,7 +66,7 @@ func (c *Client) MarketSellLimit(market string, quantity *big.Float, rate *big.F
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - market/selllimit", err.Error())
 		return TransactionID{}, c.err
 	}
 
@@ -88,7 +88,7 @@ func (c *Client) MarketBuyMarket(market string, quantity *big.Float, rate *big.F
 
 	parsedResponse = c.sendRequest("market/buymarket", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return TransactionID{}, c.err
 	}
 
@@ -100,7 +100,7 @@ func (c *Client) MarketBuyMarket(market string, quantity *big.Float, rate *big.F
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - market/buymarket", err.Error())
 		return TransactionID{}, c.err
 	}
 
@@ -122,7 +122,7 @@ func (c *Client) MarketSellMarket(market string, quantity *big.Float, rate *big.
 
 	parsedResponse = c.sendRequest("market/sellmarket", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return TransactionID{}, c.err
 	}
 
@@ -134,7 +134,7 @@ func (c *Client) MarketSellMarket(market string, quantity *big.Float, rate *big.
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - market/sellmarket", err.Error())
 		return TransactionID{}, c.err
 	}
 
@@ -154,7 +154,7 @@ func (c *Client) MarketCancel(uuid string) (bool, error) {
 
 	parsedResponse = c.sendRequest("market/cancel", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return false, c.err
 	}
 
@@ -179,7 +179,7 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 
 	parsedResponse = c.sendRequest("market/getopenorders", params)
 
-	if parsedResponse == nil {
+	if c.err != nil {
 		return nil, c.err
 	}
 
@@ -191,7 +191,7 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 	var response []OrderDescription
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
-		c.setError("parseResponse", err.Error())
+		c.setError("api error - market/getopenorders", err.Error())
 		return nil, c.err
 	}
 
