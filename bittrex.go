@@ -34,7 +34,7 @@ func NewWithCustomTimeout(key string, secret string, seconds int64) *Client {
 	return &Client{
 		apiKey:    key,
 		apiSecret: secret,
-		err:       &bittrexError{},
+		err:       nil,
 		timeout:   time.Duration(seconds) * time.Second,
 	}
 }

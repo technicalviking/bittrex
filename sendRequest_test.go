@@ -21,3 +21,20 @@ func TestGetFullURI(t *testing.T) {
 		t.Errorf("url %s doesn't match expected string %s", fullURI, compareURI)
 	}
 }
+
+func TestSendRequest(t *testing.T) {
+	endpoint := "public/getticker"
+	params := map[string]string{
+		"market": "BTC-LTC",
+	}
+
+	c := New("", "")
+
+	baseResponse := c.sendRequest(endpoint, params)
+
+	if c.err != nil {
+		t.Errorf("Base Response %+v\n", baseResponse)
+		t.Errorf("Error Message %+v\n", c.err)
+	}
+
+}
