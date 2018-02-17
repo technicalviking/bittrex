@@ -89,6 +89,10 @@ func (c *Client) sendRequest(endpoint string, params queryParams) *baseResponse 
 		return nil
 	}
 
+	if response.Success == false {
+		c.setError(fmt.Sprintf("Send Request Endpoint - %s", endpoint), response.Message)
+	}
+
 	return &response
 }
 
