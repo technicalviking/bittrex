@@ -64,6 +64,18 @@ func (bt *BittrexTimestamp) UnmarshalJSON(raw []byte) error {
 	return nil
 }
 
+func (bt BittrexTimestamp) Equal(ubt BittrexTimestamp) bool {
+	return time.Time(bt).Equal(time.Time(ubt))
+}
+
+func (bt BittrexTimestamp) Before(ubt BittrexTimestamp) bool {
+	return time.Time(bt).Before(time.Time(ubt))
+}
+
+func (bt BittrexTimestamp) After(ubt BittrexTimestamp) bool {
+	return time.Time(bt).After(time.Time(ubt))
+}
+
 func (bt *BittrexTimestamp) String() string {
 	cast := time.Time(*bt)
 	return fmt.Sprintf("%d-%d-%d %d:%d:%d", cast.Year(), cast.Month(), cast.Day(), cast.Hour(), cast.Minute(), cast.Second())
