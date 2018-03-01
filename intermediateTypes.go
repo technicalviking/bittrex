@@ -90,20 +90,20 @@ func (m *Ticker) UnmarshalJSON(raw []byte) error {
 
 func (m *MarketSummary) UnmarshalJSON(raw []byte) error {
 	temp := struct {
-		MarketName        string           `json:"MarketName"`        // : "BTC-888",
-		High              json.Number      `json:"High"`              // : 0.00000919,
-		Low               json.Number      `json:"Low"`               // : 0.00000820,
-		Volume            json.Number      `json:"Volume"`            // : 74339.61396015,
-		Last              json.Number      `json:"Last"`              // : 0.00000820,
-		BaseVolume        json.Number      `json:"BaseVolume"`        // : 0.64966963,
-		TimeStamp         BittrexTimestamp `json:"TimeStamp"`         // : "2014-07-09T07:19:30.15",
-		Bid               json.Number      `json:"Bid"`               // : 0.00000820,
-		Ask               json.Number      `json:"Ask"`               // : 0.00000831,
-		OpenBuyOrders     int              `json:"OpenBuyOrders"`     // : 15,
-		OpenSellOrders    int              `json:"OpenSellOrders"`    // : 15,
-		PrevDay           json.Number      `json:"PrevDay"`           // : 0.00000821,
-		Created           BittrexTimestamp `json:"Created"`           // : "2014-03-20T06:00:00",
-		DisplayMarketName string           `json:"DisplayMarketName"` // : null
+		MarketName        string           `json:"MarketName"`          // : "BTC-888",
+		High              json.Number      `json:"High"`                // : 0.00000919,
+		Low               json.Number      `json:"Low"`                 // : 0.00000820,
+		Volume            json.Number      `json:"Volume"`              // : 74339.61396015,
+		Last              json.Number      `json:"Last"`                // : 0.00000820,
+		BaseVolume        json.Number      `json:"BaseVolume"`          // : 0.64966963,
+		TimeStamp         BittrexTimestamp `json:"TimeStamp,omitempty"` // : "2014-07-09T07:19:30.15",
+		Bid               json.Number      `json:"Bid"`                 // : 0.00000820,
+		Ask               json.Number      `json:"Ask"`                 // : 0.00000831,
+		OpenBuyOrders     int              `json:"OpenBuyOrders"`       // : 15,
+		OpenSellOrders    int              `json:"OpenSellOrders"`      // : 15,
+		PrevDay           json.Number      `json:"PrevDay"`             // : 0.00000821,
+		Created           BittrexTimestamp `json:"Created,omitempty"`   // : "2014-03-20T06:00:00",
+		DisplayMarketName string           `json:"DisplayMarketName"`   // : null
 	}{}
 
 	if err := json.Unmarshal(raw, &temp); err != nil {
@@ -189,7 +189,7 @@ func (m *OrderDescription) UnmarshalJSON(raw []byte) error {
 		Price             json.Number      `json:"Price"`             // : 0.00000000,
 		PricePerUnit      json.Number      `json:"PricePerUnit"`      // : null,
 		Opened            BittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
-		Closed            BittrexTimestamp `json:"Closed"`            // : null,
+		Closed            BittrexTimestamp `json:"Closed,omitempty"`  // : null,
 		CancelInitiated   bool             `json:"CancelInitiated"`   // : false,
 		ImmediateOrCancel bool             `json:"ImmediateOrCancel"` // : false,
 		IsConditional     bool             `json:"IsConditional"`     // : false,
@@ -241,7 +241,7 @@ func (m *AccountOrderDescription) UnmarshalJSON(raw []byte) error {
 		Price                      json.Number      `json:"Price"`                      // : 0.00000000,
 		PricePerUnit               json.Number      `json:"PricePerUnit"`               // : null,
 		Opened                     BittrexTimestamp `json:"Opened"`                     // : "2014-07-13T07:45:46.27",
-		Closed                     BittrexTimestamp `json:"Closed"`                     // : null,
+		Closed                     BittrexTimestamp `json:"Closed,omitempty"`           // : null,
 		IsOpen                     bool             `json:"IsOpen"`                     // : true,
 		Sentinel                   string           `json:"Sentinel"`                   // : "6c454604-22e2-4fb4-892e-179eede20972",
 		CancelInitiated            bool             `json:"CancelInitiated"`            // : false,
