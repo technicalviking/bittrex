@@ -188,7 +188,7 @@ func (m *OrderDescription) UnmarshalJSON(raw []byte) error {
 		CommissionPaid    json.Number      `json:"CommissionPaid"`    // : 0.00000000,
 		Price             json.Number      `json:"Price"`             // : 0.00000000,
 		PricePerUnit      json.Number      `json:"PricePerUnit"`      // : null,
-		Opened            BittrexTimestamp `json:"Opened"`            // : "2014-07-09T03:55:48.77",
+		Opened            BittrexTimestamp `json:"Opened,omitempty"`  // : "2014-07-09T03:55:48.77",
 		Closed            BittrexTimestamp `json:"Closed,omitempty"`  // : null,
 		CancelInitiated   bool             `json:"CancelInitiated"`   // : false,
 		ImmediateOrCancel bool             `json:"ImmediateOrCancel"` // : false,
