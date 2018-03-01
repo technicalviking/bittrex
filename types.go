@@ -13,6 +13,11 @@ import (
 type BittrexTimestamp time.Time
 
 func (bt *BittrexTimestamp) UnmarshalJSON(raw []byte) error {
+	if raw == nil || len(raw) == 0 {
+		bt = nil
+		return nil
+	}
+
 	var strTimestamp string //"2014-07-09T07:19:30.15"
 
 	if err := json.Unmarshal(raw, &strTimestamp); err != nil {
