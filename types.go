@@ -24,6 +24,11 @@ func (bt *BittrexTimestamp) UnmarshalJSON(raw []byte) error {
 		return err
 	}
 
+	if strTimestamp == "" {
+		bt = nil
+		return nil
+	}
+
 	parts := strings.Split(strTimestamp, "T")
 	strDate := parts[0]
 	strTime := parts[1]
