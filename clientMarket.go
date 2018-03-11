@@ -92,16 +92,23 @@ func (c *Client) MarketBuyMarket(market string, quantity *big.Float, rate *big.F
 		return TransactionID{}, c.err
 	}
 
+	defaultValue := TransactionID{}
+
 	if parsedResponse.Success != true {
-		c.setError("api error - market/buymarket", parsedResponse.Message)
-		return TransactionID{}, c.err
+		c.setError("api error - /market/buymarket", parsedResponse.Message)
+		return defaultValue, c.err
 	}
 
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("api error - market/buymarket", err.Error())
-		return TransactionID{}, c.err
+		return defaultValue, c.err
+	}
+
+	if response == defaultValue {
+		c.setError("validate response", "buy limit response had no data")
+		return defaultValue, c.err
 	}
 
 	return response, nil
@@ -126,16 +133,23 @@ func (c *Client) MarketSellMarket(market string, quantity *big.Float, rate *big.
 		return TransactionID{}, c.err
 	}
 
+	defaultValue := TransactionID{}
+
 	if parsedResponse.Success != true {
-		c.setError("api error - market/sellmarket", parsedResponse.Message)
-		return TransactionID{}, c.err
+		c.setError("api error - /market/selllimit", parsedResponse.Message)
+		return defaultValue, c.err
 	}
 
 	var response TransactionID
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("api error - market/sellmarket", err.Error())
-		return TransactionID{}, c.err
+		return defaultValue, c.err
+	}
+
+	if response == defaultValue {
+		c.setError("validate response", "sell limit response had no data")
+		return defaultValue, c.err
 	}
 
 	return response, nil
@@ -195,5 +209,20 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []OrderDescription
+	defaultVal := OrderDescription{}
+
+	for _, curVal := range response {
+		if curVal != defaultVal {
+			cleanedResponse = append(cleanedResponse, curVal)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all historical deposits had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
