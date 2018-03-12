@@ -50,7 +50,22 @@ func (c *Client) PubMarketGetTicks(market string, interval string) ([]Candle, er
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []Candle
+	defaultVal := Candle{}
+
+	for _, curVal := range response {
+		if curVal != defaultVal {
+			cleanedResponse = append(cleanedResponse, curVal)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all candles had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
 
 // PubMarketGetLatestTick - /pub/market/getticks

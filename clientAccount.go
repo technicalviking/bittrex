@@ -33,7 +33,22 @@ func (c *Client) AccountGetBalances() ([]AccountBalance, error) {
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []AccountBalance
+	defaultAB := AccountBalance{}
+
+	for _, curBalance := range response {
+		if curBalance != defaultAB {
+			cleanedResponse = append(cleanedResponse, curBalance)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all account balances had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
 
 // AccountGetBalance - /account/getbalance
@@ -65,6 +80,11 @@ func (c *Client) AccountGetBalance(currency string) (AccountBalance, error) {
 		return AccountBalance{}, c.err
 	}
 
+	if response == (AccountBalance{}) {
+		c.setError("validate response", "account balance had empty values")
+		return AccountBalance{}, c.err
+	}
+
 	return response, nil
 }
 
@@ -91,10 +111,16 @@ func (c *Client) AccountGetDepositAddress(currency string) (WalletAddress, error
 	}
 
 	var response WalletAddress
+	defaultVal := WalletAddress{}
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("api error - account/getdepositaddress", err.Error())
-		return WalletAddress{}, c.err
+		return defaultVal, c.err
+	}
+
+	if response == defaultVal {
+		c.setError("validate response", "deposit address empty")
+		return defaultVal, c.err
 	}
 
 	return response, nil
@@ -134,10 +160,15 @@ func (c *Client) AccountWithdraw(currency string, quantity *big.Float, address s
 	}
 
 	var response TransactionID
+	defaultVal := TransactionID{}
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("api error - account/withdraw", err.Error())
-		return TransactionID{}, c.err
+		return defaultVal, c.err
+	}
+
+	if response == defaultVal {
+		c.setError("validate response", "nil vals in withdraw response")
 	}
 
 	return response, nil
@@ -160,16 +191,23 @@ func (c *Client) AccountGetOrder(orderID string) (AccountOrderDescription, error
 		return AccountOrderDescription{}, c.err
 	}
 
+	defaultVal := AccountOrderDescription{}
+
 	if parsedResponse.Success != true {
-		c.setError("api error - account/getorder", parsedResponse.Message)
-		return AccountOrderDescription{}, c.err
+		c.setError("api error - /account/getorder", parsedResponse.Message)
+		return defaultVal, c.err
 	}
 
 	var response AccountOrderDescription
 
 	if err := json.Unmarshal(parsedResponse.Result, &response); err != nil {
 		c.setError("api error - account/getorder", err.Error())
-		return AccountOrderDescription{}, c.err
+		return defaultVal, c.err
+	}
+
+	if response == defaultVal {
+		c.setError("validate response", "nil vals in get order response")
+		return defaultVal, c.err
 	}
 
 	return response, nil
@@ -210,7 +248,22 @@ func (c *Client) AccountGetOrderHistory(market string) ([]AccountOrderHistoryDes
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []AccountOrderHistoryDescription
+	defaultVal := AccountOrderHistoryDescription{}
+
+	for _, curVal := range response {
+		if curVal != defaultVal {
+			cleanedResponse = append(cleanedResponse, curVal)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all historical orders had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
 
 /*
@@ -248,7 +301,22 @@ func (c *Client) AccountGetWithdrawalHistory(currency string) ([]TransactionHist
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []TransactionHistoryDescription
+	defaultVal := TransactionHistoryDescription{}
+
+	for _, curVal := range response {
+		if curVal != defaultVal {
+			cleanedResponse = append(cleanedResponse, curVal)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all historical withdrawals had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
 
 /*
@@ -286,5 +354,20 @@ func (c *Client) AccountGetDepositHistory(currency string) ([]TransactionHistory
 		return nil, c.err
 	}
 
-	return response, nil
+	//clean out responses with nil values.
+	var cleanedResponse []TransactionHistoryDescription
+	defaultVal := TransactionHistoryDescription{}
+
+	for _, curVal := range response {
+		if curVal != defaultVal {
+			cleanedResponse = append(cleanedResponse, curVal)
+		}
+	}
+
+	if len(cleanedResponse) == 0 {
+		c.setError("validate response", "all historical deposits had empty values")
+		return nil, c.err
+	}
+
+	return cleanedResponse, nil
 }
