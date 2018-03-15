@@ -5,12 +5,15 @@ import (
 	"testing"
 )
 
-func TestAccountGetBalances(t *testing.T) {
+var (
 	//If you wanna run these tests, use your own key.
-	rClient := New(
+	rClient = New(
 		"",
 		"",
 	)
+)
+
+func TestAccountGetBalances(t *testing.T) {
 
 	var balances []AccountBalance
 	var e error
@@ -20,5 +23,18 @@ func TestAccountGetBalances(t *testing.T) {
 		t.Error(e)
 	}
 
-	fmt.Printf("BALANCES %v\n", balances)
+	t.Errorf("BALANCES %v\n", balances)
+}
+
+func TestAccountGetBalance(t *testing.T) {
+
+	var balance AccountBalance
+	var e error
+
+	if balance, e = rClient.AccountGetBalance("NBT"); e != nil {
+		fmt.Printf("WTF %v\n", e)
+		t.Error(e)
+	}
+
+	t.Errorf("BALANCE %v\n", balance)
 }

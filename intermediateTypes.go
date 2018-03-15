@@ -6,8 +6,8 @@ import (
 )
 
 func castToBigFloat(num json.Number) (result *big.Float) {
-	result, _, _ = big.ParseFloat(num.String(), 10, uint(len(num)), big.ToNearestEven)
-	return
+	floatNum, _ := num.Float64()
+	return big.NewFloat(floatNum)
 }
 
 func (m *MarketDescription) UnmarshalJSON(raw []byte) error {
