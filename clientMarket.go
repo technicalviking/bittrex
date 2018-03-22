@@ -219,7 +219,7 @@ func (c *Client) MarketGetOpenOrders(market string) ([]OrderDescription, error) 
 		}
 	}
 
-	if len(cleanedResponse) == 0 {
+	if len(cleanedResponse) == 0 && len(response) != 0 {
 		c.setError("validate response", "all historical deposits had empty values")
 		return nil, c.err
 	}

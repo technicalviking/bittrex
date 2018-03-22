@@ -43,7 +43,7 @@ func (c *Client) AccountGetBalances() ([]AccountBalance, error) {
 		}
 	}
 
-	if len(cleanedResponse) == 0 {
+	if len(cleanedResponse) == 0 && len(response) != 0 {
 		c.setError("validate response", "all account balances had empty values")
 		return nil, c.err
 	}
@@ -258,7 +258,7 @@ func (c *Client) AccountGetOrderHistory(market string) ([]AccountOrderHistoryDes
 		}
 	}
 
-	if len(cleanedResponse) == 0 {
+	if len(cleanedResponse) == 0 && len(response) != 0 {
 		c.setError("validate response", "all historical orders had empty values")
 		return nil, c.err
 	}
@@ -311,7 +311,7 @@ func (c *Client) AccountGetWithdrawalHistory(currency string) ([]TransactionHist
 		}
 	}
 
-	if len(cleanedResponse) == 0 {
+	if len(cleanedResponse) == 0 && len(response) != 0 {
 		c.setError("validate response", "all historical withdrawals had empty values")
 		return nil, c.err
 	}
@@ -364,7 +364,7 @@ func (c *Client) AccountGetDepositHistory(currency string) ([]TransactionHistory
 		}
 	}
 
-	if len(cleanedResponse) == 0 {
+	if len(cleanedResponse) == 0 && len(response) != 0 {
 		c.setError("validate response", "all historical deposits had empty values")
 		return nil, c.err
 	}
